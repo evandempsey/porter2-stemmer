@@ -4,7 +4,7 @@
 #                                                     #
 # Author: Evan Dempsey                                #
 # Email: evandempsey@gmail.com                        #
-# Last modified: 16/Jul/2012                          #
+# Last modified: 17/Nov/2013                          #
 #                                                     #
 # Usage:                                              #
 # Import it, instantiate it, and pass                 #
@@ -21,60 +21,70 @@ import re
 
 
 class Porter2Stemmer(object):
-    """Stem words according to the Porter2 stemming algorithm.
+    """
+    Stem words according to the Porter2 stemming algorithm.
     A description of the algorithm can be found at
-    http://snowball.tartarus.org/algorithms/english/stemmer.html"""
+    http://snowball.tartarus.org/algorithms/english/stemmer.html
+    """
 
     vowels = ['a', 'e', 'i', 'o', 'u', 'y']
     doubles = ['bb', 'dd', 'ff', 'gg', 'mm', 'nn', 'pp', 'rr', 'tt']
-    liEndings = ['c', 'd', 'e', 'g', 'h', 'k', 'm', 'n', 'r', 't']
+    li_endings = ['c', 'd', 'e', 'g', 'h', 'k', 'm', 'n', 'r', 't']
 
     def stem(self, word):
-        """Stem the word if it has more than two characters,
-        otherwise return it as is"""
+        """
+        Stem the word if it has more than two characters,
+        otherwise return it as is.
+        """
 
         if len(word) <= 2:
             return word
         else:
-            word = self.removeInitialApostrophe(word)
-            word = self.setYs(word)
-            self.getRegions(word)
+            word = self.remove_initial_apostrophe(word)
+            word = self.set_ys(word)
+            self.find_regions(word)
 
-            word = self.zerothStep(word)
-            word = self.firstStepA(word)
-            word = self.firstStepB(word)
-            word = self.firstStepC(word)
-            word = self.secondStep(word)
-            word = self.thirdStep(word)
-            word = self.fourthStep(word)
-            word = self.fifthStep(word)
+            word = self.strip_possessives(word)
+            word = self.replace_suffixes_1(word)
+            word = self.replace_suffixes_2(word)
+            word = self.replace_ys(word)
+            word = self.replace_suffixes_3(word)
+            word = self.replace_suffixes_4(word)
+            word = self.delete_suffixes(word)
+            word = self.process_terminals(word)
 
             return word
 
-    def removeInitialApostrophe(self, word):
-        """Remove initial apostrophes from words"""
+    def remove_initial_apostrophe(self, word):
+        """
+        Remove initial apostrophes from words.
+        """
         if word[0] == "'":
             word = word[1:]
 
         return word
 
-    def setYs(self, word):
-        """Identify Ys that are to be treated
-        as consonants and make them uppercase"""
+    def set_ys(self, word):
+        """
+        Identify Ys that are to be treated
+        as consonants and make them uppercase.
+        """
 
         if word[0] == 'y':
             word = 'Y' + word[1:]
 
         for match in re.finditer("[aeiou]y", word):
-            yIndex = match.end() - 1
-            charList = [x for x in word]
-            charList[yIndex] = 'Y'
-            word = ''.join(charList)
+            y_index = match.end() - 1
+            char_list = [x for x in word]
+            char_list[y_index] = 'Y'
+            word = ''.join(char_list)
 
         return word
 
-    def getRegions(self, word):
-        """Find regions R1 and R2"""
+    def find_regions(self, word):
+        """
+        Find regions R1 and R2.
+        """
         self.r1 = sys.maxint
         self.r2 = sys.maxint
 
@@ -89,10 +99,12 @@ class Porter2Stemmer(object):
                     self.r2 = match.end()
                 break
 
-    def isShort(self, word):
-        """Determine if the word is short. Short words
+    def is_short(self, word):
+        """
+        Determine if the word is short. Short words
         are ones that end in a short syllable and
-        have an empty R1 region."""
+        have an empty R1 region.
+        """
 
         short = False
         length = len(word)
@@ -108,8 +120,10 @@ class Porter2Stemmer(object):
 
         return short
 
-    def zerothStep(self, word):
-        """Get rid of apostrophes indicating possession"""
+    def strip_possessives(self, word):
+        """
+        Get rid of apostrophes indicating possession.
+        """
 
         if word.endswith("'s'"):
             return word[:-3]
@@ -120,7 +134,11 @@ class Porter2Stemmer(object):
         else:
             return word
 
-    def firstStepA(self, word):
+    def replace_suffixes_1(self, word):
+        """
+        Find the longest suffix among the ones specified
+        and perform the required action.
+        """
         length = len(word)
 
         if word.endswith("sses"):
@@ -148,8 +166,12 @@ class Porter2Stemmer(object):
 
         return word
 
-    def firstStepB(self, word):
-        hasVowel = False
+    def replace_suffixes_2(self, word):
+        """
+        Find the longest suffix among the ones specified
+        and perform the required action.
+        """
+        has_vowel = False
 
         if word.endswith('eed'):
             if len(word) >= self.r1:
@@ -164,46 +186,48 @@ class Porter2Stemmer(object):
         elif word.endswith('ed'):
             for vowel in self.vowels:
                 if vowel in word[:-2]:
-                    hasVowel = True
+                    has_vowel = True
                     word = word[:-2]
                     break
 
         elif word.endswith('edly'):
             for vowel in self.vowels:
                 if vowel in word[:-4]:
-                    hasVowel = True
+                    has_vowel = True
                     word = word[:-4]
                     break
 
         elif word.endswith('ing'):
             for vowel in self.vowels:
                 if vowel in word[:-3]:
-                    hasVowel = True
+                    has_vowel = True
                     word = word[:-3]
                     break
 
         elif word.endswith('ingly'):
             for vowel in self.vowels:
                 if vowel in word[:-5]:
-                    hasVowel = True
+                    has_vowel = True
                     word = word[:-5]
                     break
 
         # Be sure to only perform one of these.
-        if hasVowel:
+        if has_vowel:
             length = len(word)
             if word[length - 2:] in ['at', 'bl', 'iz']:
                 word += 'e'
             elif word[length - 2:] in self.doubles:
                 word = word[:-1]
-            elif self.isShort(word):
+            elif self.is_short(word):
                 word += 'e'
 
         return word
 
-    def firstStepC(self, word):
-        """Replace y or Y with i if preceded by a non-vowel
-        which is not the first letter of the word"""
+    def replace_ys(self, word):
+        """
+        Replace y or Y with i if preceded by a non-vowel
+        which is not the first letter of the word
+        ."""
         length = len(word)
 
         if word[length - 1] in 'Yy':
@@ -213,8 +237,10 @@ class Porter2Stemmer(object):
 
         return word
 
-    def secondStep(self, word):
-        """Perform replacements on common suffixes"""
+    def replace_suffixes_3(self, word):
+        """.
+        Perform replacements on more common suffixes.
+        """
         length = len(word)
 
         replacements = {'tional': 'tion', 'enci': 'ence', 'anci': 'ance',
@@ -239,13 +265,15 @@ class Porter2Stemmer(object):
 
         if word.endswith('li'):
             if self.r1 <= (length - 2):
-                if word[length - 3] in self.liEndings:
+                if word[length - 3] in self.li_endings:
                     word = word[:-2]
 
         return word
 
-    def thirdStep(self, word):
-        """Perform replacements on common suffixes, part deux"""
+    def replace_suffixes_4(self, word):
+        """
+        Perform replacements on even more common suffixes.
+        """
 
         length = len(word)
         replacements = {'ational': 'ate', 'tional': 'tion', 'alize': 'al',
@@ -254,9 +282,9 @@ class Porter2Stemmer(object):
 
         for suffix in replacements.keys():
             if word.endswith(suffix):
-                suffixLength = len(suffix)
-                if self.r1 <= (length - suffixLength):
-                    word = word[:-suffixLength] + replacements[suffix]
+                suffix_length = len(suffix)
+                if self.r1 <= (length - suffix_length):
+                    word = word[:-suffix_length] + replacements[suffix]
 
         if word.endswith('ative'):
             if self.r1 <= (length - 5) and self.r2 <= (length - 5):
@@ -264,9 +292,10 @@ class Porter2Stemmer(object):
 
         return word
 
-    def fourthStep(self, word):
-        """Delete some very common suffixes"""
-
+    def delete_suffixes(self, word):
+        """
+        Delete some very common suffixes.
+        """
         length = len(word)
         suffixes = ['al', 'ance', 'ence', 'er', 'ic', 'able', 'ible',
                     'ant', 'ement', 'ment', 'ent', 'ism', 'ate',
@@ -283,7 +312,7 @@ class Porter2Stemmer(object):
 
         return word
 
-    def fifthStep(self, word):
+    def process_terminals(self, word):
         """Deal with terminal Es and Ls and
         convert any uppercase Ys back to lowercase"""
 
@@ -294,7 +323,7 @@ class Porter2Stemmer(object):
                 word = word[:-1]
 
             elif self.r1 <= (length - 1):
-                if not self.isShort(word[:-1]):
+                if not self.is_short(word[:-1]):
                     word = word[:-1]
 
         elif word[length - 1] == 'l':
@@ -308,9 +337,11 @@ class Porter2Stemmer(object):
 
 
 def main():
-    """If stemmer is being invoked from command line,
+    """
+    If stemmer is being invoked from command line,
     perform tests based on the list of words and their stemmed
-    counterparts in the porter2_stemmed.csv file provided"""
+    counterparts in the porter2_stemmed.csv file provided.
+    """
 
     print '*** Porter2Stemmer.py Tests ***'
     stemmer = Porter2Stemmer()
