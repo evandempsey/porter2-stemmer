@@ -4,7 +4,7 @@
 #                                                     #
 # Author: Evan Dempsey                                #
 # Email: evandempsey@gmail.com                        #
-# Last modified: 17/Nov/2013                          #
+# Last modified: 24/Nov/2013                          #
 #                                                     #
 # Usage:                                              #
 # Import it, instantiate it, and pass                 #
@@ -274,7 +274,6 @@ class Porter2Stemmer(object):
         """
         Perform replacements on even more common suffixes.
         """
-
         length = len(word)
         replacements = {'ational': 'ate', 'tional': 'tion', 'alize': 'al',
                         'icate': 'ic', 'iciti': 'ic', 'ical': 'ic',
@@ -313,9 +312,10 @@ class Porter2Stemmer(object):
         return word
 
     def process_terminals(self, word):
-        """Deal with terminal Es and Ls and
-        convert any uppercase Ys back to lowercase"""
-
+        """
+        Deal with terminal Es and Ls and
+        convert any uppercase Ys back to lowercase.
+        """
         length = len(word)
 
         if word[length - 1] == 'e':
@@ -342,7 +342,6 @@ def main():
     perform tests based on the list of words and their stemmed
     counterparts in the porter2_stemmed.csv file provided.
     """
-
     print '*** Porter2Stemmer.py Tests ***'
     stemmer = Porter2Stemmer()
 
