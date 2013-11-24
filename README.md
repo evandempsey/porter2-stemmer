@@ -3,7 +3,7 @@ porter2-stemmer
 
 Python implementation of Martin Porter's updated algorithmic stemmer.
 
-What is a stemming?
+What is stemming?
 ------------------
 
 Stemming is a technique used in Natural Language Processing to reduce different inflected forms of words to a single
@@ -18,7 +18,7 @@ search engine. If someone searches for "cat" it would be nice if they were shown
 too. Unless the query and document index are stemmed, that won't happen. Stemming can be thought of as a method to reduce
 the specificity of queries in order to pull back more relevant results. As such, it involves a trade-off.
 
-This is an algorithmic stemmer. Are there other kinds?
+What type of stemmer is this?
 ------------------------------------------------------
 
 Porter2 is a suffix-stripping stemmer. It transforms words into stems by applying a deterministic sequence of
