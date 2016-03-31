@@ -29,7 +29,7 @@ setup(
     long_description=readme + '\n\n' + history,
     author="Evan Dempsey",
     author_email='me@evandempsey.io',
-    url='https://github.com/evandempsey/porter2stemmer',
+    url='https://github.com/evandempsey/porter2-stemmer',
     packages=[
         'porter2stemmer',
     ],
