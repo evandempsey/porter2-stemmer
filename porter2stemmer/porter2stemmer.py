@@ -4,7 +4,7 @@
 #                                                     #
 # Author: Evan Dempsey                                #
 # Email: evandempsey@gmail.com                        #
-# Last modified: 24/Nov/2013                          #
+# Last modified: 31/Mar/2016                          #
 #                                                     #
 # Usage:                                              #
 # Import it, instantiate it, and pass                 #
@@ -335,7 +335,3 @@ class Porter2Stemmer(object):
         word = ''.join(char_list)
 
         return word
-
-if __name__ == "__main__":
-    stemmer = Porter2Stemmer()
-    print(stemmer.stem("cheese"))
