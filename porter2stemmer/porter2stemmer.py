@@ -31,6 +31,10 @@ class Porter2Stemmer(object):
     doubles = ['bb', 'dd', 'ff', 'gg', 'mm', 'nn', 'pp', 'rr', 'tt']
     li_endings = ['c', 'd', 'e', 'g', 'h', 'k', 'm', 'n', 'r', 't']
 
+    def __init__(self):
+        self.r1 = sys.maxsize
+        self.r2 = sys.maxsize
+
     def stem(self, word):
         """
         Stem the word if it has more than two characters,
@@ -85,9 +89,6 @@ class Porter2Stemmer(object):
         """
         Find regions R1 and R2.
         """
-        self.r1 = sys.maxint
-        self.r2 = sys.maxint
-
         length = len(word)
 
         for index, match in enumerate(re.finditer("[aeiouy][^aeiouy]", word)):
@@ -253,9 +254,9 @@ class Porter2Stemmer(object):
 
         for suffix in replacements.keys():
             if word.endswith(suffix):
-                suffixLength = len(suffix)
-                if self.r1 <= (length - suffixLength):
-                    word = word[:-suffixLength] + replacements[suffix]
+                suffix_length = len(suffix)
+                if self.r1 <= (length - suffix_length):
+                    word = word[:-suffix_length] + replacements[suffix]
 
         if word.endswith('ogi'):
             if self.r1 <= (length - 3):
@@ -330,35 +331,11 @@ class Porter2Stemmer(object):
             if self.r2 <= (length - 1) and word[length - 2] == 'l':
                 word = word[:-1]
 
-        charList = [x if x != 'Y' else 'y' for x in word]
-        word = ''.join(charList)
+        char_list = [x if x != 'Y' else 'y' for x in word]
+        word = ''.join(char_list)
 
         return word
 
-
-def main():
-    """
-    If stemmer is being invoked from command line,
-    perform tests based on the list of words and their stemmed
-    counterparts in the porter2_stemmed.csv file provided.
-    """
-    print '*** Porter2Stemmer.py Tests ***'
+if __name__ == "__main__":
     stemmer = Porter2Stemmer()
-
-    try:
-        testCases = open('porter2_stemmed.csv', 'r')
-    except IOError:
-        print 'Testing file could not be found. Exiting...'
-        return
-
-    for line in testCases:
-        line = line.split(',')
-        print line[0] + ' => ' + line[1].strip()
-        assert stemmer.stem(line[0]) == line[1].strip()
-
-    testCases.close()
-    print 'All tests passed.'
-
-
-if __name__ == '__main__':
-    main()
+    print(stemmer.stem("cheese"))
