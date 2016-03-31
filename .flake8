@@ -1,0 +1,4 @@
+[flake8]
+ignore = E501
+exclude = docs/*, tests/*, build/*
+max-complexity = 25
