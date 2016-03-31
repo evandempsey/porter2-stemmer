@@ -2,8 +2,8 @@
 Porter2 Stemmer
 ===============================
 
-.. image:: https://img.shields.io/travis/evandempsey/porter2stemmer.svg
-        :target: https://travis-ci.org/evandempsey/porter2stemmer
+.. image:: https://travis-ci.org/evandempsey/porter2-stemmer.svg
+        :target: https://travis-ci.org/evandempsey/porter2-stemmer
 
 .. image:: https://img.shields.io/pypi/v/porter2stemmer.svg
         :target: https://pypi.python.org/pypi/porter2stemmer
@@ -12,7 +12,7 @@ Porter2 Stemmer
 An implementation of the Porter2 English stemming algorithm.
 
 * Free software: BSD license
-* Documentation: https://porter2stemmer.readthedocs.org.
+* Documentation: http://porter2-stemmer.readthedocs.org/
 
 What is stemming?
 *****************
@@ -40,11 +40,8 @@ map diverse forms to a centre form. Different approaches have different advantag
 How do I use it?
 ****************
 
-Very simply. Import it, instantiate a stemmer, and away you go.
+Very simply. Import it, instantiate a stemmer, and away you go::
 
-```python
-from Porter2Stemmer import Porter2Stemmer
-stemmer = Porter2Stemmer()
-print(stemmer.stem('conspicuous'))
-```
-
+    from porter2stemmer import Porter2Stemmer
+    stemmer = Porter2Stemmer()
+    print(stemmer.stem('conspicuous'))
