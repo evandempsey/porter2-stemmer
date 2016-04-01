@@ -8,6 +8,8 @@ Porter2 Stemmer
 .. image:: https://img.shields.io/pypi/v/porter2stemmer.svg
         :target: https://pypi.python.org/pypi/porter2stemmer
 
+.. image:: https://img.shields.io/coveralls/evandempsey/porter2-stemmer.svg
+    :target: https://coveralls.io/r/evandempsey/porter2-stemmer
 
 An implementation of the Porter2 English stemming algorithm.
 
