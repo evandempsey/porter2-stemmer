@@ -42,11 +42,11 @@ map diverse forms to a centre form. Different approaches have different advantag
 How do I use it?
 ****************
 
-First, install it.
+First, install it::
 
     $ pip install porter2stemmer
 
-Then import it, instantiate a stemmer, and away you go::
+Then import it, instantiate a stemmer, and call the stem method with the word you want to stem as an argument::
 
     from porter2stemmer import Porter2Stemmer
     stemmer = Porter2Stemmer()
