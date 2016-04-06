@@ -42,8 +42,13 @@ map diverse forms to a centre form. Different approaches have different advantag
 How do I use it?
 ****************
 
-Very simply. Import it, instantiate a stemmer, and away you go::
+First, install it.
+
+    $ pip install porter2stemmer
+
+Then import it, instantiate a stemmer, and away you go::
 
     from porter2stemmer import Porter2Stemmer
     stemmer = Porter2Stemmer()
     print(stemmer.stem('conspicuous'))
+
